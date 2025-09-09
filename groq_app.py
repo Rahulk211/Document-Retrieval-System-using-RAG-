@@ -36,7 +36,7 @@ def load_models():
     llm_model_name = "openai/gpt-oss-120b"
 
     load_dotenv("api.env")
-    GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+    GROQ_API_KEY = os.getenv("GROQ_API_KEY", st.secrets["GROQ_API_KEY"])
 
     if not GROQ_API_KEY:
         st.error("Groq API key environment variable not set. Please set it")
