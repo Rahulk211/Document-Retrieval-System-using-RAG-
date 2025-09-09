@@ -5,7 +5,6 @@ from langchain_huggingface import HuggingFaceEmbeddings, HuggingFacePipeline
 from langchain_community.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from chromadb.config import Settings
 from langchain.prompts import PromptTemplate
 from langchain_groq import ChatGroq
 from accelerate import init_empty_weights, load_checkpoint_and_dispatch
