@@ -25,7 +25,7 @@ st.markdown("Upload a PDF and ask questions about its content.")
 def load_models():
     st.info("Loading llm Models...")
 
-    model_name = "C://Users//Rahul//.cache//huggingface//hub//models--sentence-transformers--all-MiniLM-L6-v2//snapshots//c9745ed1d9f207416be6d2e6f8de32d1f16199bf"  # noqa: E501
+    model_name = "sentence-transformers/all-MiniLM-L6-v2"
     model_kwargs = {'device': 'cpu'}
 
     embedding = HuggingFaceEmbeddings(
