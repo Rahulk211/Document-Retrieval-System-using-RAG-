@@ -2,9 +2,10 @@ import streamlit as st
 import torch
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_huggingface import HuggingFaceEmbeddings, HuggingFacePipeline
-from langchain_community.vectorstores import FAISS
+from langchain_chroma import Chroma
 from langchain.chains import RetrievalQA
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from chromadb.config import Settings
 from langchain.prompts import PromptTemplate
 from langchain_groq import ChatGroq
 from accelerate import init_empty_weights, load_checkpoint_and_dispatch
@@ -25,7 +26,7 @@ st.markdown("Upload a PDF and ask questions about its content.")
 def load_models():
     st.info("Loading llm Models...")
 
-    model_name = "sentence-transformers/all-MiniLM-L6-v2"
+    model_name = "C://Users//Rahul//.cache//huggingface//hub//models--sentence-transformers--all-MiniLM-L6-v2//snapshots//c9745ed1d9f207416be6d2e6f8de32d1f16199bf"  # noqa: E501
     model_kwargs = {'device': 'cpu'}
 
     embedding = HuggingFaceEmbeddings(
@@ -36,7 +37,7 @@ def load_models():
     llm_model_name = "openai/gpt-oss-120b"
 
     load_dotenv("api.env")
-    GROQ_API_KEY = os.getenv("GROQ_API_KEY", st.secrets["GROQ_API_KEY"])
+    GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
     if not GROQ_API_KEY:
         st.error("Groq API key environment variable not set. Please set it")
@@ -83,15 +84,14 @@ def processing_data(_files, _embedding):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=200)
     text_chunks = text_splitter.split_documents(all_docs)
 
-    # vectordb = Chroma.from_documents(
-    #     documents=text_chunks,
-    #     embedding=_embedding,
-    #     client_settings=Settings(
-    #         anonymized_telemetry=False,
-    #         is_persistent=False
-    #     )
-    # )
-    vectordb = FAISS.from_documents(text_chunks, _embedding)
+    vectordb = Chroma.from_documents(
+        documents=text_chunks,
+        embedding=_embedding,
+        client_settings=Settings(
+            anonymized_telemetry=False,
+            is_persistent=False
+        )
+    )
 
     return vectordb
 
