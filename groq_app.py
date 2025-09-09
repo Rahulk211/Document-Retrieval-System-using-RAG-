@@ -2,7 +2,7 @@ import streamlit as st
 import torch
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_huggingface import HuggingFaceEmbeddings, HuggingFacePipeline
-from langchain_chroma import Chroma
+from langchain_community.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from chromadb.config import Settings
@@ -84,14 +84,15 @@ def processing_data(_files, _embedding):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=200)
     text_chunks = text_splitter.split_documents(all_docs)
 
-    vectordb = Chroma.from_documents(
-        documents=text_chunks,
-        embedding=_embedding,
-        client_settings=Settings(
-            anonymized_telemetry=False,
-            is_persistent=False
-        )
-    )
+    # vectordb = Chroma.from_documents(
+    #     documents=text_chunks,
+    #     embedding=_embedding,
+    #     client_settings=Settings(
+    #         anonymized_telemetry=False,
+    #         is_persistent=False
+    #     )
+    # )
+    vectordb = FAISS.from_documents(text_chunks, _embedding)
 
     return vectordb
 
