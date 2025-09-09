@@ -87,7 +87,10 @@ def processing_data(_files, _embedding):
     vectordb = Chroma.from_documents(
         documents=text_chunks,
         embedding=_embedding,
-        client_settings=Settings(anonymized_telemetry=False)
+        client_settings=Settings(
+            anonymized_telemetry=False,
+            is_persistent=False
+        )
     )
 
     return vectordb
